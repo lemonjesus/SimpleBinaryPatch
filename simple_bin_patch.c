@@ -1,4 +1,3 @@
-#include <string.h>
 #include "simple_bin_patch.h"
 
 long generate_patch(byte* old, byte* new, byte* patch, long size) {
@@ -26,7 +25,7 @@ long generate_patch(byte* old, byte* new, byte* patch, long size) {
             patch[patch_ptr] = 1; // 1 = write
             _write_int_as_bytes(length, patch + patch_ptr + 1);
             patch_ptr += sizeof(int) + 1;
-            memcpy(patch + patch_ptr, new + src_ptr - length, length);
+            _memcpy(patch + patch_ptr, new + src_ptr - length, length);
             patch_ptr += length;
             continue;
         }
@@ -50,7 +49,7 @@ int apply_patch(byte* patch, byte* dest, long patch_length) {
             break;
 
             case 1:
-            memcpy(dest + dest_ptr, patch + patch_ptr, length);
+            _memcpy(dest + dest_ptr, patch + patch_ptr, length);
             dest_ptr += length;
             patch_ptr += length;
             break;
@@ -61,6 +60,10 @@ int apply_patch(byte* patch, byte* dest, long patch_length) {
         }
     }
     return 0;
+}
+
+void _memcpy(byte* dest, const byte* src, long len) {
+  while (len--) *dest++ = *src++;
 }
 
 int _read_int_as_bytes(byte* src) {
