@@ -1,0 +1,4 @@
+apply_patch
+example
+generate_patch
+*.bin
