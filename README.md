@@ -8,7 +8,6 @@ I was working on patching firmware on an embedded device. My code would load the
 
 ## Requirements
 
- - A 32-bit integer (if this is not the case for your platform, you will need to modify the code.)
  - An implementation of `memcpy`. `simple_bin_patch.c` includes `string.h` but you might not need to if you have your own implementaion.
 
  ## API
@@ -42,6 +41,5 @@ This algorithm works best on sparsely different files, or with files that have l
  ## Future Work
   - Better compression (don't use an int for the length of a segment if a byte will suffice)
   - Don't rely on `memcpy` for 100% dependency free code
-  - Don't assume a 32-bit integer. Make it configurable with 32-bits being the default.
   - Automated tests.
   - Checksum checking, so we don't clobber a target with data we know to be corrupted.

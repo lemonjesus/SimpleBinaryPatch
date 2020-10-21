@@ -15,7 +15,7 @@ long generate_patch(byte* old, byte* new, byte* patch, long size) {
             }
             patch[patch_ptr] = 0; // 0 = skip
             _write_int_as_bytes(length, patch + patch_ptr + 1);
-            patch_ptr += 5;
+            patch_ptr += sizeof(int) + 1;
             continue;
         }
         if(*(old + src_ptr) != *(new + src_ptr)) {
@@ -25,7 +25,7 @@ long generate_patch(byte* old, byte* new, byte* patch, long size) {
             }
             patch[patch_ptr] = 1; // 1 = write
             _write_int_as_bytes(length, patch + patch_ptr + 1);
-            patch_ptr += 5;
+            patch_ptr += sizeof(int) + 1;
             memcpy(patch + patch_ptr, new + src_ptr - length, length);
             patch_ptr += length;
             continue;
@@ -43,7 +43,7 @@ int apply_patch(byte* patch, byte* dest, long patch_length) {
     while(patch_ptr < patch_length) {
         opcode = patch[patch_ptr++];
         length = _read_int_as_bytes(patch + patch_ptr);
-        patch_ptr += 4;
+        patch_ptr += sizeof(int);
         switch(opcode) {
             case 0:
             dest_ptr += length;
