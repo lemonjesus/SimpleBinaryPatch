@@ -6,6 +6,9 @@ Simple Binary Patch is a pair of functions that can create a diff between two bi
 
 I was working on patching firmware on an embedded device. My code would load the original firmware from memory and then attempt to patch it with modified code I had written elsewhere. The binary images were sparsely different, and I needed an easy way to patch the original firmware since copying the whole modified firmware file was impractical. Since this was on an embedded device, I couldn't use the features of other binary diffs since they used compression, `malloc`, and other complications. I made this to be as simple as possible so it would work on pretty much everything.
 
+ ## Requirements
+Simple Binary Patch requires fixed width data types. It includes `stdint.h`, but if that's not available on your platform you'll need to typedef your own.
+
  ## API
 
  `long generate_patch(byte* old, byte* new, byte* patch, long size)`
