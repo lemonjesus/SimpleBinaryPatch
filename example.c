@@ -22,9 +22,9 @@ unsigned char new[25] = {
 };
 
 int main() {
-    byte* patch_buf = (byte*)calloc(25 * 6, sizeof(byte));
+    uint8_t* patch_buf = (uint8_t*)calloc(25 * 6, sizeof(uint8_t));
 
-    long len = generate_patch(old, new, patch_buf, 25);
+    uint32_t len = generate_patch(old, new, patch_buf, 25);
     printf("len = %d\n", len);
     for(int i = 0; i < (len / 8) + 1; i++) {
         printf("%.4x | %.2x %.2x %.2x %.2x %.2x %.2x %.2x %.2x\n", i, patch_buf[i*8+0], patch_buf[i*8+1], patch_buf[i*8+2], patch_buf[i*8+3], patch_buf[i*8+4], patch_buf[i*8+5], patch_buf[i*8+6], patch_buf[i*8+7]);

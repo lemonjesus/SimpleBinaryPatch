@@ -16,22 +16,22 @@ int main(int argc, char** argv) {
 
     fseek(patch_fp, 0L, SEEK_END);
     fseek(old_fp, 0L, SEEK_END);
-    long patch_len = ftell(patch_fp);
-    long old_len = ftell(old_fp);
+    uint32_t patch_len = ftell(patch_fp);
+    uint32_t old_len = ftell(old_fp);
 
     rewind(patch_fp); rewind(old_fp);
 
     FILE* new_fp = fopen(argv[3], "wb");
 
-    byte* patch_buf = (byte*)malloc(patch_len);
-    byte* old_buf = (byte*)malloc(old_len);
+    uint8_t* patch_buf = (uint8_t*)malloc(patch_len);
+    uint8_t* old_buf = (uint8_t*)malloc(old_len);
 
-    fread(patch_buf, sizeof(byte), patch_len, patch_fp);
-    fread(old_buf, sizeof(byte), old_len, old_fp);
+    fread(patch_buf, sizeof(uint8_t), patch_len, patch_fp);
+    fread(old_buf, sizeof(uint8_t), old_len, old_fp);
 
-    int result = apply_patch(patch_buf, old_buf, patch_len);
+    uint32_t result = apply_patch(patch_buf, old_buf, patch_len);
 
-    fwrite(old_buf, sizeof(byte), old_len, new_fp);
+    fwrite(old_buf, sizeof(uint8_t), old_len, new_fp);
 
     if(result != 0) {
         printf("this patch contains an unrecognized opcode. it was skipped and the\n");
