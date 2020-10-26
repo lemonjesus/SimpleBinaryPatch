@@ -82,9 +82,9 @@ int main(int argc, char** argv)
 		return 7;
 	}
 	fwrite(&patch.diff_len,   sizeof(len_t),   1,              patch_out);
-	fwrite(&patch.diff_start, sizeof(len_t),   patch.diff_len, patch_out);
-	fwrite(&patch.diff_delta, sizeof(len_t),   patch.diff_len, patch_out);
-	fwrite(&patch.heap,       sizeof(uint8_t), patch.heap_len, patch_out);
+	fwrite( patch.diff_start, sizeof(len_t),   patch.diff_len, patch_out);
+	fwrite( patch.diff_delta, sizeof(len_t),   patch.diff_len, patch_out);
+	fwrite( patch.heap,       sizeof(uint8_t), patch.heap_len, patch_out);
 
 	fclose(patch_out);
 	free(patch.diff_start);
