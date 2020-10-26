@@ -26,18 +26,17 @@ uint8_t new[BUF_LEN] = {
 
 int main() {
 	struct binary_patch patch = {
-		.bin_len    = BUF_LEN,
+		.diff_len   = DIFF_COUNT,
 		.diff_start = malloc(DIFF_COUNT * sizeof(len_t)),
 		.diff_delta = malloc(DIFF_COUNT * sizeof(len_t)),
-		.diff_len   = DIFF_COUNT,
+		.heap_len   = DIFF_SIZE,
 		.heap       = malloc(DIFF_SIZE),
-		.heap_len   = DIFF_SIZE
 	};
 
 	if (!patch.diff_start || !patch.diff_delta || !patch.heap)
-		return -1;
+		return 1;
 
-	switch (gen_patch(old, new, &patch)) {
+	switch (gen_patch(old, new, BIN_LEN, &patch)) {
 		case SUCCESS:                                       break;
 		case OUT_OF_DIFF: puts("ran out of diff space\n");  goto free_and_die;
 		case OUT_OF_HEAP: puts("ran out of heap space\n");  goto free_and_die;
