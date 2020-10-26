@@ -25,7 +25,6 @@ int main(int argc, char** argv) {
 	rewind(patch);
 	rewind(old);
 
-
 	uint8_t *patch_buf = (uint8_t *) malloc(patch_len);
 	uint8_t *old_buf   = (uint8_t *) malloc(old_len);
 

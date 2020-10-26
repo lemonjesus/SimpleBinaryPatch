@@ -6,7 +6,7 @@ enum bp_ret_code {
 	OUT_OF_HEAP
 };
 
-typedef uint16_t len_t;       // Change this to tweak sizing for effiency
+typedef uint32_t len_t;       // Change this to tweak sizing for effiency
 
 struct binary_patch {
 	len_t    diff_len;    // Lenth of the 2 below arrays, they shall be the same
