@@ -2,10 +2,10 @@ CC=gcc
 
 all: generate_patch apply_patch
 
-generate_patch: generate_patch.c simple_bin_patch.c bin_patch.h
+generate_patch: generate_patch.c bin_patch.c bin_patch.h
 	${CC} -o generate_patch generate_patch.c bin_patch.c
 
-apply_patch: apply_patch.c simple_bin_patch.c bin_patch.h
+apply_patch: apply_patch.c bin_patch.c bin_patch.h
 	${CC} -o apply_patch apply_patch.c bin_patch.c
 
 example: example.c bin_patch.c bin_patch.h
