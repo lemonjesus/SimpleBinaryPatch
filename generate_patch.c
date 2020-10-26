@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 	free(old_buf);
 	free(new_buf);
 
-	if (!ret) {
+	if (ret) {
 		printf("generating patch failed because %d\n", ret);
 		free(patch.diff_start);
 		free(patch.diff_delta);
