@@ -33,3 +33,6 @@ make clean     # deletes the binaries
 - Better compression
 - Automated tests.
 - Checksum checking, so we don't clobber a target with data we know to be corrupted.
+
+## Authors
+SimpleBinaryPatch is the brainchild of Tucker Osman, but Wesley Van Pelt raised that child into a respectable program that's far more structured and efficient. The repo is maintained by Tucker.

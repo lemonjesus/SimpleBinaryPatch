@@ -1,19 +1,19 @@
 #include <stdint.h>
 
 enum bp_ret_code {
-	SUCCESS = 0,
-	OUT_OF_DIFF,
-	OUT_OF_HEAP
+    SUCCESS = 0,
+    OUT_OF_DIFF,
+    OUT_OF_HEAP
 };
 
-typedef uint32_t len_t;       // Change this to tweak sizing for effiency
+typedef uint32_t len_t;   // Change this to tweak sizing for effiency
 
 struct binary_patch {
-	len_t    diff_len;    // Lenth of the 2 below arrays, they shall be the same
-	len_t   *diff_start;  // Array of indexes for the starts of the differing sections
-	len_t   *diff_delta;  // Array of lengths of the differing sections
-	len_t    heap_len;    // How many bytes the heap is
-	uint8_t *heap;        // Bytes of space to put the differing data in
+    len_t    diff_len;    // Lenth of the 2 below arrays, they shall be the same
+    len_t   *diff_start;  // Array of indexes for the starts of the differing sections
+    len_t   *diff_delta;  // Array of lengths of the differing sections
+    len_t    heap_len;    // How many bytes the heap is
+    uint8_t *heap;        // Bytes of space to put the differing data in
 };
 
 /**
