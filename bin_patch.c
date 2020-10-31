@@ -8,14 +8,16 @@ static void blockcpy(uint8_t *dest, uint8_t *src, len_t len) {
 
 len_t index_to_len(index_t n) {
     len_t ret = 0;
-    for (uint8_t i = 0; i < sizeof(index_t); ret |= n.n[i] << 8 * i);
+    for (uint8_t i = 0; i < sizeof(index_t); i++)
+        ret |= n.n[i] << 8 * i;
     return ret;
 }
 
 
 index_t len_to_index(len_t n) {
     index_t ret;
-    for (uint8_t i = 0; i < sizeof(index_t); ret.n[i] = n >> 8 * i);
+    for (uint8_t i = 0; i < sizeof(index_t); i++)
+        ret.n[i] = n >> 8 * i;
     return ret;
 }
 
@@ -56,6 +58,7 @@ enum bp_ret_code gen_patch(uint8_t *old, uint8_t *new, len_t bin_len, struct bin
         patch->diff_delta[curr_diff] = len_to_index(j - i);
         blockcpy(&patch->heap[curr_heap], &new[i], j - i);
         curr_heap += j - i;
+        i = j;
     }
 
     return OUT_OF_DIFF;

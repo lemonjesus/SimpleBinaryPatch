@@ -5,8 +5,8 @@
 
 // this is the file I use to test generate and apply patch
 #define BUF_LEN    25
-#define DIFF_COUNT 3
-#define DIFF_SIZE  5
+#define DIFF_COUNT 3 * 1000
+#define DIFF_SIZE  5 * 1000
 
 uint8_t old[BUF_LEN] = {
     0x34, 0x23, 0x8D, 0x2B, 0xFF, 0x25, 0xEA, 0xC0, 0xBF, 0x16,
@@ -26,27 +26,28 @@ uint8_t new[BUF_LEN] = {
 
 int main() {
     struct binary_patch patch = {
-        .diff_len   = DIFF_COUNT,
-        .diff_start = malloc(DIFF_COUNT * sizeof(len_t)),
-        .diff_delta = malloc(DIFF_COUNT * sizeof(len_t)),
-        .heap_len   = DIFF_SIZE,
+        .diff_len   = len_to_index(DIFF_COUNT),
+        .diff_start = malloc(DIFF_COUNT * sizeof(index_t)),
+        .diff_delta = malloc(DIFF_COUNT * sizeof(index_t)),
+        .heap_len   = len_to_index(DIFF_SIZE),
         .heap       = malloc(DIFF_SIZE),
     };
 
     if (!patch.diff_start || !patch.diff_delta || !patch.heap)
         return 1;
 
-    switch (gen_patch(old, new, BIN_LEN, &patch)) {
+    switch (gen_patch(old, new, BUF_LEN, &patch)) {
         case SUCCESS:                                       break;
         case OUT_OF_DIFF: puts("ran out of diff space\n");  goto free_and_die;
         case OUT_OF_HEAP: puts("ran out of heap space\n");  goto free_and_die;
     }
 
-    printf("heap used: %d\n", patch.heap_len);
-    printf("diff used: %d\n", patch.diff_len);
+    printf("heap used: %d\n", index_to_len(patch.heap_len));
+    printf("diff used: %d\n", index_to_len(patch.diff_len));
     printf("\ti = (start,len)\n");
-    for (len_t i = 0; i < patch.diff_len; i++)
-        printf("\t%d = (%d,%d)\n", i, patch.diff_start[i], patch.diff_delta[i]);
+    for (len_t i = 0; i < index_to_len(patch.diff_len); i++)
+        printf("\t%d = (%d,%d)\n", i, index_to_len(patch.diff_start[i]),
+                                      index_to_len(patch.diff_delta[i]));
 
 
     apply_patch(old, &patch);
