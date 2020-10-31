@@ -8,11 +8,10 @@ static void blockcpy(char *dest, char *src, len_t len) {
 
 
 len_t index_to_len(index_t n) {
-    // len_t ret = 0;
-    // for (char i = 0; i < sizeof(index_t); i++)
-    //     ret += n.b[i] << (8 * i);
-    // return ret;
-    return *((len_t *) &n);
+    len_t ret = 0;
+    for (char i = 0; i < sizeof(index_t); i++)
+        ret |= (n.b[i] & 0xFF) << 8 * i;
+    return ret;
 }
 
 
