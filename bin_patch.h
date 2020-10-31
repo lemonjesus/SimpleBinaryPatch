@@ -1,4 +1,12 @@
-#include <stdint.h>
+#include <stdint.h>  // Only needed for len_t typedef
+
+/*
+ * Change these to tweak sizing for space savings, note that
+ * sizeof(len_t) needs to be larger than sizeof(index_t).
+ * These exsist to fix endian difference in a flexible way.
+ */
+typedef uint32_t len_t;
+typedef struct { char b[3]; } index_t;
 
 enum bp_ret_code {
     SUCCESS = 0,
@@ -6,20 +14,28 @@ enum bp_ret_code {
     OUT_OF_HEAP
 };
 
-// Change these to tweak sizing for space savings, note that
-// sizeof(len_t) needs to be larger than sizeof(index_t)
-typedef uint32_t len_t;
-typedef struct { uint8_t n[3]; } index_t;
-
 struct binary_patch {
     index_t  diff_len;    // Lenth of the 2 below arrays, they shall be the same
     index_t *diff_start;  // Array of indexes for the starts of the differing sections
     index_t *diff_delta;  // Array of lengths of the differing sections
     index_t  heap_len;    // How many bytes the heap is
-    uint8_t *heap;        // Bytes of space to put the differing data in
+    char    *heap;        // Bytes of space to put the differing data in
 };
 
+/**
+ * Use this to convert from index_t to len_t.
+ *
+ * @param n - index_t to convert to a useable number
+ * @return  - a len_t you can actually use
+ */
 len_t index_to_len(index_t n);
+
+/**
+ * Use this to convert from len_t to index_t.
+ *
+ * @param n - len_t to convert to an annoying number
+ * @return  - an index_t you will hate because you can't use it directly
+ */
 index_t len_to_index(len_t n);
 
 /**
@@ -30,12 +46,13 @@ index_t len_to_index(len_t n);
  * @param *dest  - Place to be patching
  * @param *patch - Place for the patch, as genreated by gen_patch()
  */
-void apply_patch(uint8_t *dest, struct binary_patch *patch);
+void apply_patch(char *dest, struct binary_patch *patch);
 
 /**
  * Generates a patch of 2 equal size chunks of binary data.  Will update patch.diff_len and
  * patch.heap_len to the actual values once complete.  These values must be set to the allocated
- * length before calling.
+ * length before calling.  Note that the diff length must be 1 unit longer than the actual diff,
+ * but this does not apply to the heap.
  *
  * @param *old     - Original binary data
  * @param *new     - New binary data
@@ -43,4 +60,4 @@ void apply_patch(uint8_t *dest, struct binary_patch *patch);
  * @param *patch   - Place for the patch, diff_start and diff_stop must be the same size
  * @return         - 0 if successful, otherwise a non-zero return code
  */
-enum bp_ret_code gen_patch(uint8_t *old, uint8_t *new, len_t bin_len, struct binary_patch *patch);
+enum bp_ret_code gen_patch(char *old, char *new, len_t bin_len, struct binary_patch *patch);

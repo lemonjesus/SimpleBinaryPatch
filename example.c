@@ -5,8 +5,8 @@
 
 // this is the file I use to test generate and apply patch
 #define BUF_LEN    25
-#define DIFF_COUNT 3 * 1000
-#define DIFF_SIZE  5 * 1000
+#define DIFF_COUNT 3
+#define DIFF_SIZE  5
 
 uint8_t old[BUF_LEN] = {
     0x34, 0x23, 0x8D, 0x2B, 0xFF, 0x25, 0xEA, 0xC0, 0xBF, 0x16,
@@ -48,7 +48,6 @@ int main() {
     for (len_t i = 0; i < index_to_len(patch.diff_len); i++)
         printf("\t%d = (%d,%d)\n", i, index_to_len(patch.diff_start[i]),
                                       index_to_len(patch.diff_delta[i]));
-
 
     apply_patch(old, &patch);
     printf("after applying, memcmp returned %d\n", memcmp(old, new, BUF_LEN));
