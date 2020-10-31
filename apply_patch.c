@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     rewind(patch);
     rewind(old);
 
-    uint8_t *patch_buf = (uint8_t *) malloc(patch_len);
-    uint8_t *old_buf   = (uint8_t *) malloc(old_len);
+    char *patch_buf = (char *) malloc(patch_len);
+    char *old_buf   = (char *) malloc(old_len);
 
     if (!patch_buf || !old_buf) {
         printf("patch or old buffer could not be allocated\n");
@@ -35,17 +35,18 @@ int main(int argc, char** argv) {
         return 3;
     }
 
-    fread(patch_buf, sizeof(uint8_t), patch_len, patch);
-    fread(old_buf,   sizeof(uint8_t), old_len,   old);
+    fread(patch_buf, sizeof(char), patch_len, patch);
+    fread(old_buf,   sizeof(char), old_len,   old);
     fclose(patch);
     fclose(old);
 
-    len_t diff_len = *((len_t *) patch_buf);
+    index_t diff_leni = *((index_t *) patch_buf);
+    len_t   diff_lenl = index_to_len(diff_leni);
     struct binary_patch bp = {
-        .diff_len   = diff_len,
-        .diff_start = ((len_t *) patch_buf + 1),
-        .diff_delta = ((len_t *) patch_buf + diff_len + 1),
-        .heap       = (uint8_t *) ((len_t *) patch_buf + diff_len * 2 + 1)
+        .diff_len   = diff_leni,
+        .diff_start = ((index_t *) patch_buf + 1),
+        .diff_delta = ((index_t *) patch_buf + diff_lenl + 1),
+        .heap       = (char *) ((index_t *) patch_buf + diff_lenl * 2 + 1)
     };
     apply_patch(old_buf, &bp);
 
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
         free(old_buf);
         return 4;
     }
-    fwrite(old_buf, sizeof(uint8_t), old_len, new);
+    fwrite(old_buf, sizeof(char), old_len, new);
     fclose(new);
 
     free(patch_buf);

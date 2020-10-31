@@ -6,7 +6,7 @@
  * These exsist to fix endian difference in a flexible way.
  */
 typedef uint32_t len_t;
-typedef struct { char b[3]; } index_t;
+typedef struct { char b[4]; } index_t;
 
 enum bp_ret_code {
     SUCCESS = 0,
