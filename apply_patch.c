@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     rewind(patch);
     rewind(old);
 
-    char *patch_buf = (char *) malloc(patch_len);
-    char *old_buf   = (char *) malloc(old_len);
+    u8_t *patch_buf = (u8_t *) malloc(patch_len);
+    u8_t *old_buf   = (u8_t *) malloc(old_len);
 
     if (!patch_buf || !old_buf) {
         printf("patch or old buffer could not be allocated\n");
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
         return 3;
     }
 
-    fread(patch_buf, sizeof(char), patch_len, patch);
-    fread(old_buf,   sizeof(char), old_len,   old);
+    fread(patch_buf, sizeof(u8_t), patch_len, patch);
+    fread(old_buf,   sizeof(u8_t), old_len,   old);
     fclose(patch);
     fclose(old);
 
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
         .diff_len   = diff_leni,
         .diff_start = ((index_t *) patch_buf + 1),
         .diff_delta = ((index_t *) patch_buf + diff_lenl + 1),
-        .heap       = (char *) ((index_t *) patch_buf + diff_lenl * 2 + 1)
+        .heap       = (u8_t *) ((index_t *) patch_buf + diff_lenl * 2 + 1)
     };
     apply_patch(old_buf, &bp);
 
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
         free(old_buf);
         return 4;
     }
-    fwrite(old_buf, sizeof(char), old_len, new);
+    fwrite(old_buf, sizeof(u8_t), old_len, new);
     fclose(new);
 
     free(patch_buf);

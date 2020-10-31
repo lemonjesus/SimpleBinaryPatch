@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
     rewind(old);
     rewind(new);
 
-    char *old_buf = (char *) malloc(bin_len);
-    char *new_buf = (char *) malloc(bin_len);
+    u8_t *old_buf = (u8_t *) malloc(bin_len);
+    u8_t *new_buf = (u8_t *) malloc(bin_len);
     if (!old_buf || !new_buf) {
         printf("failed to allocate file buffers\n");
         fclose(old);
@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
         return 4;
     }
 
-    fread(old_buf, sizeof(char), bin_len, old);
-    fread(new_buf, sizeof(char), bin_len, new);
+    fread(old_buf, sizeof(u8_t), bin_len, old);
+    fread(new_buf, sizeof(u8_t), bin_len, new);
     fclose(old);
     fclose(new);
 
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
     fwrite(&patch.diff_len,   sizeof(index_t), 1,                            patch_out);
     fwrite( patch.diff_start, sizeof(index_t), index_to_len(patch.diff_len), patch_out);
     fwrite( patch.diff_delta, sizeof(index_t), index_to_len(patch.diff_len), patch_out);
-    fwrite( patch.heap,       sizeof(char),    index_to_len(patch.heap_len), patch_out);
+    fwrite( patch.heap,       sizeof(u8_t),    index_to_len(patch.heap_len), patch_out);
 
     fclose(patch_out);
     free(patch.diff_start);
