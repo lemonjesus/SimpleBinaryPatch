@@ -3,11 +3,11 @@
 /*
  * Change these to tweak sizing for space savings, note that
  * sizeof(len_t) needs to be larger than sizeof(index_t).
- * These exsist to fix endian difference in a flexible way.
+ * These exist to fix endian difference in a flexible way.
  */
 typedef unsigned char u8_t;
 typedef uint32_t len_t;
-typedef struct { u8_t b[4]; } index_t;
+typedef struct { u8_t b[3]; } index_t;
 
 enum bp_ret_code {
     SUCCESS = 0,
@@ -16,7 +16,7 @@ enum bp_ret_code {
 };
 
 struct binary_patch {
-    index_t  diff_len;    // Lenth of the 2 below arrays, they shall be the same
+    index_t  diff_len;    // Length of the 2 below arrays, they shall be the same
     index_t *diff_start;  // Array of indexes for the starts of the differing sections
     index_t *diff_delta;  // Array of lengths of the differing sections
     index_t  heap_len;    // How many bytes the heap is
@@ -51,9 +51,9 @@ void apply_patch(u8_t *dest, struct binary_patch *patch);
 
 /**
  * Generates a patch of 2 equal size chunks of binary data.  Will update patch.diff_len and
- * patch.heap_len to the actual values once complete.  These values must be set to the allocated
- * length before calling.  Note that the diff length must be 1 unit longer than the actual diff,
- * but this does not apply to the heap.
+ * patch.heap_len to the actual values once complete.  These values must be set to the
+ * allocated length before calling.  Note that the diff length must be 1 unit longer than the
+ * actual diff, but this does not apply to the heap.
  *
  * @param *old     - Original binary data
  * @param *new     - New binary data
