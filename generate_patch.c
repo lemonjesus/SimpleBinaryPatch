@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
     rewind(old);
     rewind(new);
 
-    uint8_t *old_buf = (uint8_t *) malloc(bin_len);
-    uint8_t *new_buf = (uint8_t *) malloc(bin_len);
+    u8_t *old_buf = (u8_t *) malloc(bin_len);
+    u8_t *new_buf = (u8_t *) malloc(bin_len);
     if (!old_buf || !new_buf) {
         printf("failed to allocate file buffers\n");
         fclose(old);
@@ -40,17 +40,17 @@ int main(int argc, char** argv) {
         return 4;
     }
 
-    fread(old_buf, sizeof(uint8_t), bin_len, old);
-    fread(new_buf, sizeof(uint8_t), bin_len, new);
+    fread(old_buf, sizeof(u8_t), bin_len, old);
+    fread(new_buf, sizeof(u8_t), bin_len, new);
     fclose(old);
     fclose(new);
 
     // Allocating for the worst case
     struct binary_patch patch = {
-        .diff_len   = bin_len,
+        .diff_len   = len_to_index(bin_len),
         .diff_start = malloc((bin_len + 1) * sizeof(len_t)),
         .diff_delta = malloc((bin_len + 1) * sizeof(len_t)),
-        .heap_len   = bin_len / 2 + 1,
+        .heap_len   = len_to_index(bin_len / 2 + 1),
         .heap       = malloc(bin_len / 2 + 1),
     };
     if (!patch.diff_start || !patch.diff_delta || !patch.heap) {
@@ -80,10 +80,10 @@ int main(int argc, char** argv) {
         free(patch.heap);
         return 7;
     }
-    fwrite(&patch.diff_len,   sizeof(len_t),   1,              patch_out);
-    fwrite( patch.diff_start, sizeof(len_t),   patch.diff_len, patch_out);
-    fwrite( patch.diff_delta, sizeof(len_t),   patch.diff_len, patch_out);
-    fwrite( patch.heap,       sizeof(uint8_t), patch.heap_len, patch_out);
+    fwrite(&patch.diff_len,   sizeof(index_t), 1,                            patch_out);
+    fwrite( patch.diff_start, sizeof(index_t), index_to_len(patch.diff_len), patch_out);
+    fwrite( patch.diff_delta, sizeof(index_t), index_to_len(patch.diff_len), patch_out);
+    fwrite( patch.heap,       sizeof(u8_t),    index_to_len(patch.heap_len), patch_out);
 
     fclose(patch_out);
     free(patch.diff_start);
